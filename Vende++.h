@@ -10,7 +10,6 @@
 #include<algorithm>
 #include <ctime>
 
-
 #include "defs.h"
 #include "Date.h"
 #include "Customer.h"
@@ -23,21 +22,15 @@ using namespace std;
 
 class VendeMaisMais {
 private:
-	string store;
 	string fileCustomers, fileProducts, fileTransactions;
-	bool changedTransactions; // Flag which is true if you need to save at the end of the transactions
-	bool changedCustomers; // Flag which is true if you need to save at the end of the customers
 	vector<Customer> customers; // Vector that saves information from existing customers
 	vector<Product> products; // Vector that saves information of available products
 	vector<Transaction> transactions; // Vector that saves information of transactions effected
 	map<string, int> customerIdx;  // map to "translate" customer's name on his index in the customers vector
 	map<string, int> productIdx;  // map to "translate" the product name on his index in the products vector
-	multimap<int, int> transactionIdx; // multimap to "translate" the customer's identifier in the indexes of their transactions in the transactions vector
-
-
+	
 public:
 	VendeMaisMais();
-	VendeMaisMais(string store, string fileCustomers, string fileProducts, string fileTransactions);
 	void requestFiles(string &fileCustomers, string &fileProducts, string &fileTransactions);
 	void separate_customer(string line, vector<Customer> &customers, unsigned int &index);
 	bool readFileCustomers(vector<Customer> &customers, string &fileCustomers);
@@ -74,8 +67,14 @@ public:
 	void bottom10VP(vector<Customer> &customers);
 	void vectorBottom10(unsigned int id, vector<int> &result, vector<Transaction> &transactions);
 	void saveProducts(vector <string> &product_recomendation, vector<bool> line, vector<Product> &products);
+	int maxCommonProduct(vector <int> &number);
+	void saveCommonProduct(vector <int> &commonProduct, vector <int> &number, vector <Product> &products, int max);
+	bool discoverOtherCustomer(vector <int> &commonProduct, vector<bool> line);
+	void purchasedProduct(vector <string> &get_recomendation, vector <int> &commonProduct, vector <Product> products, vector <bool> line);
+	void customersPurchases(vector <string> &customerPurchases, vector <bool> line, vector <Product> &products);
+	int returnIndexProduct(vector <int> &productsSupermarket, int max);
 	void recomendationBottom10(vector<Customer> &customers, vector<Product> &products, vector<Transaction> &transactions);
-	double compare(vector<bool> line1, vector <bool> line2);
+	float compare(vector<bool> line1, vector <bool> line2);
 	int chooseProduct(vector<string> &product_recomendation, string prod);
 	int returnIndexMax(vector<int> &number);
 	void getRecomendation(vector<string> &product_recomendation, vector<bool> line1, vector <bool> line2, vector<Product> &products);

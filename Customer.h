@@ -20,7 +20,6 @@ private:
 
 public:
 	Customer();
-	Customer(ifstream & in);
 	void setName(string name);
 	void setIdentifier(unsigned int identifier);
 	void setVolumePurchases(float volumePurchases);

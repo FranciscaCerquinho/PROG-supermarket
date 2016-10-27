@@ -5,12 +5,6 @@ VendeMaisMais::VendeMaisMais()
 
 }
 
-VendeMaisMais::VendeMaisMais(string store, string fichClients, string fileProducts, string fileTransactions)
-{
-
-	// A IMPLEMENTAR 
-}
-
 void VendeMaisMais::requestFiles(string &fileCustomers, string &fileProducts, string &fileTransactions)
 {
 	
@@ -28,11 +22,6 @@ void VendeMaisMais::requestFiles(string &fileCustomers, string &fileProducts, st
 
 	mainMenu(customers, products, transactions, fileCustomers, fileProducts, fileTransactions);
 	
-	/*
-	fileCustomers = ("customers.txt");
-	fileProducts = ("products.txt");
-	fileTransactions = ("transactions.txt");
-	*/
 	
 }
 
@@ -42,25 +31,25 @@ Customer management
 
 void VendeMaisMais::separate_customer(string line, vector<Customer> &customers, unsigned int &index)
 {
-	/*Function to separate elements of structure of customers, with the desired format (identifier ; name ; value) and and puts them in a vector*/
+	/*Function to separate elements of structure of customers, with the desired format (identifier ; name ; date ; value) and and puts them in a vector*/
 
 	size_t l = line.find_first_of(';'); /*Determines the size until you find the first semicolon*/
 	string first = line.substr(0, (l - 1)); /*Separates the first element (identifier) of the rest of the elements, that is, extract the first semicolon*/
 
 	line = line.substr(l + 2); /*The line happens to be from space after the first semicolon*/
 	l = line.find_first_of(';'); /*Find the second semicolon*/
-	string second = line.substr(0, (l - 1)); /*The line happens to be from space after the first semicolon*/
+	string second = line.substr(0, (l - 1)); /*Separates the second element (name) of the rest of the elements*/
 
 
-	line = line.substr(l + 2); /*Extracts the rest of the line (value)*/
-	l = line.find_first_of(';');
-	string third = line.substr(0, l - 1);
+	line = line.substr(l + 2); /*The line happens to be from space after the second semicolon*/
+	l = line.find_first_of(';'); /*Find the third semicolon*/
+	string third = line.substr(0, l - 1); /*Separates the third element (date) of the rest of the elements*/
 
-	string fourd = line.substr(l + 2);
+	string fourd = line.substr(l + 2); /*Extracts the rest of the line (value)*/
 
 
 	const char * c = first.c_str();
-	int number = atoi(c); /*Converts a variable of type string to integer, in this case converts the client identifier (of type integer) in a string.*/
+	int number = atoi(c); /*Converts a variable of type string to integer, in this case converts the customer identifier (of type integer) in a string.*/
 	const char * c1 = fourd.c_str();
 	float number2 = stof(c1); /*Converts a variable of type float to string, in this case converts the value (of type float) in a string*/
 
@@ -100,7 +89,7 @@ bool VendeMaisMais::readFileCustomers(vector<Customer> &customers, string &fileC
 
 	while (getline(fin, line))
 	{
-		if (line.size() > 1)/*If the size of line is > 0, calls the function Separate_customer*/
+		if (line.size() > 1)/*If the size of line is > 1, calls the function Separate_customer*/
 			separate_customer(line, customers, counter);
 	}
 
@@ -167,7 +156,7 @@ void VendeMaisMais::customersListAlphaOrder(vector<Customer> &customers) const
 
 void VendeMaisMais::informationOneCustomer(vector<Customer> &customers)
 {
-	/*Function that show the information about one customer*/
+	/*Function that show the information about one customer by the identifier*/
 
 	int i = 0;
 	int identifier;
@@ -196,7 +185,7 @@ void VendeMaisMais::informationOneCustomer(vector<Customer> &customers)
 
 void VendeMaisMais::informationOneCustomer_name(vector<Customer> &customers)
 {
-	/*Function that show the information about one customer*/
+	/*Function that show the information about one customer by the name*/
 
 	int i = 0;
 	string name;
@@ -221,12 +210,12 @@ void VendeMaisMais::informationOneCustomer_name(vector<Customer> &customers)
 	}
 
 	if (!find)
-		cout << "Customer doesn't exist. Try again, please." << endl;
+		cout << "Customer doesn't exist. Try again, please." << endl << endl;
 }
 
 bool VendeMaisMais::verifyCustomer(vector<Customer> &customers, int identifier)
 {
-	/*Function to check if the client that user entered exists*/
+	/*Function to check if the customer that user entered exists*/
 
 	int i = 0;
 
@@ -245,8 +234,9 @@ int VendeMaisMais::askIdentifier(vector<Customer> &customers)
 	string input;
 	bool find = false;
 
-	cout << "What is the identifier of customer who you want change? " << endl;
+	cout << "What is the identifier of customer who you want change? ";
 	cin >> input;
+	cout << endl;
 
 	stringstream convertor(input); /*Check if it is a number*/
 
@@ -415,6 +405,7 @@ int VendeMaisMais::insertCustomers(vector<Customer> &customers, vector<Transacti
 	cout << "Insert name of customer: ";
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	getline(cin, name);
+	cout << endl;
 
 	amount = 0;
 
@@ -488,7 +479,7 @@ void VendeMaisMais::removeCustomers(vector<Customer> &customers, string &fileCus
 	{
 		convertor >> id;
 
-		while (verifyCustomer(customers, id) == false) /*Check if the customer exists*/
+		while (verifyCustomer(customers, id) == false && convertor.fail()) /*Check if the customer exists*/
 		{
 			cout << "This customer don't exist. Try again." << endl;
 			cout << "Identifier: ";
@@ -500,7 +491,7 @@ void VendeMaisMais::removeCustomers(vector<Customer> &customers, string &fileCus
 			if (!find && id == customers.at(i).getIdentifier())
 			{
 				customers.erase(customers.begin() + i); /*Remove customer*/
-				cout << "Removed customer." << endl << endl;
+				cout << endl << "Removed customer." << endl << endl;
 				find = true; /*Put the variable to find true when it finds the user's chosen date*/
 			}
 
@@ -510,7 +501,7 @@ void VendeMaisMais::removeCustomers(vector<Customer> &customers, string &fileCus
 
 	/*If don't find the identifier choose by user, show this message*/
 	if (!find)
-		cout << "Not found customer." << endl << endl;
+		cout << "\nNot found customer." << endl << endl;
 
 	else
 	{
@@ -843,6 +834,7 @@ void VendeMaisMais::transactionsOneCustomer_name(vector <Customer> &customers, v
 	{
 		if (transactions.at(i).getIdentifier() == identifier)
 		{
+			find = true;
 			cout << "Identifier of customer: " << transactions.at(i).getIdentifier() << endl;
 			cout << "Date of transaction: " << transactions.at(i).getDate() << endl;
 			cout << "List of products: " << endl;
@@ -857,6 +849,10 @@ void VendeMaisMais::transactionsOneCustomer_name(vector <Customer> &customers, v
 
 		i++;
 	}
+
+	/*If you do not find the user's chosen date shows this message on the screen*/
+	if (!find)
+		cout << "This customer doesn't make purchases. Try again, please." << endl << endl;
 
 }
 
@@ -885,7 +881,8 @@ void VendeMaisMais::transactionsOneCustomer(vector <Customer> &customers, vector
 	{
 		if (transactions.at(i).getIdentifier() == identifier)
 		{
-			cout << "Identifier of customer: " << transactions.at(i).getIdentifier() << endl;
+			find = true;
+			cout << "\nIdentifier of customer: " << transactions.at(i).getIdentifier() << endl;
 			cout << "Date of transaction: " << transactions.at(i).getDate() << endl;
 			cout << "List of products: " << endl;
 
@@ -1192,126 +1189,13 @@ void VendeMaisMais::vectorBottom10(unsigned int id, vector<int> &result, vector<
 
 void VendeMaisMais::saveProducts(vector <string> &product_recomendation, vector<bool> line, vector<Product> &products)
 {
-	bool find = false;
-	int k = 0;
+	//function that takes the line of a customer and saves in a vector(product_recomendation) products purchased by this
 
 	for (int i = 0; i < line.size(); i++)
 	{
 		if (line.at(i))
-		{
-			if (product_recomendation.size() == 0)
-				product_recomendation.push_back(products.at(i).getName());
-
-			else
-			{
-				k = 0;
-				while (k < product_recomendation.size() && !find)
-				{
-					if (products.at(i).getName() == product_recomendation.at(k)) {
-						find = true;
-						break;
-					}
-
-					k++;
-				}
-
-				if (find == false)
-					product_recomendation.push_back(products.at(i).getName());
-
-				find = false;
-			}
-		}
+			product_recomendation.push_back(products.at(i).getName());
 	}
-}
-
-void VendeMaisMais::recomendationBottom10(vector<Customer> &customers, vector<Product> &products, vector<Transaction> &transactions)
-{
-	unsigned int identifier;
-	int nlines = maximumIdentifier(customers, transactions);
-	int ncolumns = products.size();
-	const double RECOMENDATION = 0.60;
-	vector<unsigned int> ids;
-	vector<unsigned int> ids2;
-	vector<int> result(products.size(), 0);
-	vector<int> result2(products.size(), 0);
-	vector <string> product_recomendation;
-
-	vector<vector<bool> > matrix_recomendation(nlines, vector<bool>(ncolumns, false)); /*Matrix*/
-
-
-	for (int i = 0; i < transactions.size(); i++)
-	{
-		for (int k = 0; k < transactions.at(i).getProducts().size(); k++)
-		{
-			int lines = transactions.at(i).getIdentifier() - 1;
-			int columns = productIdx[transactions.at(i).getProducts().at(k)];
-			matrix_recomendation[lines][columns] = true; /*If the product is purchased, puts it true*/
-		}
-	}
-
-	for (int i = 0; i < customers.size(); i++)
-	{
-		int min = i;
-
-		for (int j = i; j < customers.size(); j++)
-			if (customers.at(min).getVolumePurchases() > customers.at(j).getVolumePurchases())
-				min = j;
-
-		float tmp = customers.at(i).getVolumePurchases();
-		customers.at(i).setVolumePurchases(customers.at(min).getVolumePurchases());
-		customers.at(min).setVolumePurchases(tmp);
-
-		int identifier = customers.at(i).getIdentifier();
-		customers.at(i).setIdentifier(customers.at(min).getIdentifier());
-		customers.at(min).setIdentifier(identifier);
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		ids.push_back(customers.at(i).getIdentifier());
-	}
-	/*
-	for (int i = 0; i < ids.size(); i++)
-	{
-	cout << ids.at(i) << endl;
-	}
-
-	*/
-	for (int i = 0; i < ids.size(); i++)
-	{
-		vectorBottom10(ids.at(i) - 1, result, transactions);
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		saveProducts(product_recomendation, matrix_recomendation[customers.at(i).getIdentifier() - 1], products);
-	}
-
-
-	for (int i = 0; i < product_recomendation.size(); i++)
-	{
-		cout << product_recomendation.at(i) << endl;
-	}
-
-}
-
-double VendeMaisMais::compare(vector<bool> line1, vector <bool> line2)
-{
-	/*Function that returns the division of the number of products purchased by both customers and the total number
-	of products purchased by one customer.*/
-
-	int count1 = 0;
-	int count2 = 0;
-
-	for (int i = 0; i < line1.size(); i++)
-	{
-		if (line1.at(i) == line2.at(i) && line1.at(i) == true)
-			count1++;
-		if (line1.at(i) == true)
-			count2++;
-	}
-
-	return count1 / (float)count2;
 }
 
 int VendeMaisMais::chooseProduct(vector<string> &product_recomendation, string prod)
@@ -1326,6 +1210,21 @@ int VendeMaisMais::chooseProduct(vector<string> &product_recomendation, string p
 
 	return counter;
 
+}
+
+int VendeMaisMais::maxCommonProduct(vector <int> &number)
+{
+	int max = 0;
+
+	for (int i = 0; i < number.size(); i++)
+	{
+		if (number.at(i) > max)
+		{
+			max = number.at(i);
+		}
+	}
+
+	return max;
 }
 
 int VendeMaisMais::returnIndexMax(vector<int> &number)
@@ -1346,13 +1245,240 @@ int VendeMaisMais::returnIndexMax(vector<int> &number)
 
 }
 
+int VendeMaisMais::returnIndexProduct(vector <int> &productsSupermarket, int max)
+{
+	for (int i = 0; i < productsSupermarket.size();i++)
+	{
+		if (max == productsSupermarket.at(i))
+		{
+			return i;
+		}
+	}
+}
+
+void VendeMaisMais::saveCommonProduct(vector <int> &commonProduct, vector <int> &number , vector <Product> &products, int max)
+{
+	for (int i= 0; i < number.size();i++)
+	{
+		if (number.at(i) == max)
+			commonProduct.push_back(1);
+		else
+			commonProduct.push_back(0);
+	}
+}
+
+bool VendeMaisMais::discoverOtherCustomer(vector <int> &commonProduct, vector<bool> line)
+{
+	bool find = true;
+
+	for (int i = 0; i < commonProduct.size(); i++)
+	{
+		if (commonProduct.at(i) == 1)
+		{
+			if (!line.at(i))
+			{
+				find = false;
+			}
+		}
+
+	}
+	return find;
+}
+
+void VendeMaisMais::purchasedProduct(vector <string> &get_recomendation, vector <int> &commonProduct, vector <Product> products, vector <bool> line)
+{
+	/*Recommends to customer what is not purchased and isn't in commonProduct 
+	vector and check if the product already is in get_recomendation vector*/
+
+	int j = 0;
+	bool found = false;
+
+	for (int i = 0; i < line.size(); i++)
+	{
+		if (commonProduct.at(i) == 0 && line.at(i))
+		{
+			if (get_recomendation.size() == 0)
+				get_recomendation.push_back(products.at(i).getName());
+
+			else
+			{
+				j = 0;
+				while (j < get_recomendation.size() && !found)
+				{
+					if (products.at(i).getName() == get_recomendation.at(j))
+						found = true;
+
+					j++;
+				}
+
+				if (found == false)
+				{
+					get_recomendation.push_back(products.at(i).getName());
+				}
+
+				found = false;
+			}
+		}
+	}
+
+}
+
+void VendeMaisMais::customersPurchases(vector <string> &customerPurchases, vector <bool> line, vector <Product> &products)
+{
+	for (int i = 0; i < line.size(); i++)
+	{
+		if (line.at(i))
+			customerPurchases.push_back(products.at(i).getName());
+
+	}
+}
+
+void VendeMaisMais::recomendationBottom10(vector<Customer> &customers, vector<Product> &products, vector<Transaction> &transactions)
+{
+	int nlines = maximumIdentifier(customers, transactions);
+	int ncolumns = products.size();
+	vector<unsigned int> ids; //identifiers that do not belong to bottom10
+	vector <string> product_recomendation; //products purchased by bottom10
+	vector <int> number; //save the frequency of each product purchased by bottom10
+	vector <int> commonProduct; //place the number one in every products that were purchased the same number of times by bottom10
+	vector <string> get_recomendation; //products recomendation
+	vector <string> customerPurchases; //all products purchased by customers
+	vector <int> productsSupermarket; //save the frequency of each product purchased by all the customers
+
+	vector<vector<bool> > matrix_recomendation(nlines, vector<bool>(ncolumns, false)); /*Matrix*/
+
+	for (int i = 0; i < transactions.size(); i++)
+	{
+		for (int k = 0; k < transactions.at(i).getProducts().size(); k++)
+		{
+			int lines = transactions.at(i).getIdentifier() - 1;
+			int columns = productIdx[transactions.at(i).getProducts().at(k)];
+			matrix_recomendation[lines][columns] = true; /*If the product is purchased, puts it true*/
+		}
+	}
+
+//order customers, from worst to best
+	for (int i = 0; i < customers.size(); i++) 
+	{
+		int min = i;
+
+		for (int j = i; j < customers.size(); j++)
+			if (customers.at(min).getVolumePurchases() > customers.at(j).getVolumePurchases())
+				min = j;
+
+		float tmp = customers.at(i).getVolumePurchases();
+		customers.at(i).setVolumePurchases(customers.at(min).getVolumePurchases());
+		customers.at(min).setVolumePurchases(tmp);
+
+		int identifier = customers.at(i).getIdentifier();
+		customers.at(i).setIdentifier(customers.at(min).getIdentifier());
+		customers.at(min).setIdentifier(identifier);
+	}
+
+	
+	for (int i = 10; i < customers.size(); i++) //store in a vector customer identifiers that do not belong to bottom10
+	{
+		ids.push_back(customers.at(i).getIdentifier());
+	}
+	
+	for (int i = 0; i < 10; i++) //products purchased by bottom10
+	{
+		saveProducts(product_recomendation, matrix_recomendation[customers.at(i).getIdentifier() - 1], products);
+	}
+
+	/*store in a vector, according to the index of each product in the product vector, the frequency 
+	of each product purchased by Bottom10*/
+	for (int i = 0; i < products.size(); i++)
+	{
+		number.push_back(chooseProduct(product_recomendation, products.at(i).getName()));
+	}
+
+	//place the number one in every products that were purchased the same number of times by bottom10
+	saveCommonProduct(commonProduct, number, products, maxCommonProduct(number)); 
+	
+	//finds customers who bought the same common products to bottom10 and keep other products bought by this customers in get_recomendation vector
+	for (int i = 0; i < ids.size(); i++)
+	{
+		if (discoverOtherCustomer(commonProduct, matrix_recomendation[ids.at(i)-1]))
+		{
+			purchasedProduct(get_recomendation, commonProduct, products, matrix_recomendation[ids.at(i)-1]);
+		}
+	}
+
+	//finds all products purchased by customers
+	for (int i = 0; i < customers.size(); i++)
+	{
+		customersPurchases(customerPurchases, matrix_recomendation[customers.at(i).getIdentifier()-1], products);
+	}
+
+	/*save the frequency of each product purchased by all the customers 
+	and sets to 0 the products that were purchased the same number of times by bottom10
+	*/
+	for (int i = 0; i < products.size(); i++)
+	{
+		if (commonProduct.at(i)== 1)
+			productsSupermarket.push_back(0);
+		else
+		productsSupermarket.push_back(chooseProduct(customerPurchases, products.at(i).getName()));
+	}
+
+	//if there is no possible recommendation
+	if (get_recomendation.size() == 0)
+	{
+		cout << "Don't exist recomendation." << endl << endl;
+	}
+
+//having a list of products to recommend, recommend only the one that is most purchased
+	else
+	{
+		bool found_recomendation = false;
+		int max = maxCommonProduct(productsSupermarket);
+
+		while (max != 0 && !found_recomendation)
+		{
+			for (int i = 0; i < get_recomendation.size(); i++)
+			{
+				if (get_recomendation.at(i) == products.at(returnIndexProduct(productsSupermarket, max)).getName())
+				{
+					found_recomendation = true;
+					cout << "The recommended product is " << get_recomendation.at(i) << endl << endl;
+					break;
+				}
+			}
+
+			max--;
+		}
+
+		if (!found_recomendation)
+		{
+			cout << "\nThe recommended product is " << get_recomendation.at(0) << endl << endl;
+		}
+
+	}
+}
+
+float VendeMaisMais::compare(vector<bool> line1, vector <bool> line2)
+{
+	/*Function that returns the division of the number of products purchased by both customers and the total number
+	of products purchased by one customer.*/
+
+	int count1 = 0;
+	int count2 = 0;
+
+	for (int i = 0; i < line1.size(); i++)
+	{
+		if (line1.at(i) == line2.at(i) && line1.at(i) == true)
+			count1++;
+		if (line1.at(i) == true)
+			count2++;
+	}
+
+	return count1 / (float)count2;
+}
+
 void VendeMaisMais::getRecomendation(vector<string> &product_recomendation, vector<bool> line1, vector <bool> line2, vector<Product> &products)
 {
-	/*Recomends to customer what is not purchased and is in vector product_recomendation and check that the
-	recommended products does not repeat*/
-
-	bool find = false;
-	int k = 0;
+	/*Recommends to customer what is not purchased*/
 
 	for (int i = 0; i < line1.size(); i++)
 	{
@@ -1382,9 +1508,9 @@ void VendeMaisMais::recomendationSystem(vector<Customer> &customers, vector<Prod
 {
 	int nlines = maximumIdentifier(customers, transactions);
 	int ncolumns = products.size();
-	const double RECOMENDATION = 0.60;
-	vector<string> product_recomendation;
-	vector<int> number;
+	const float RECOMENDATION = 0.50;
+	vector<string> product_recomendation; //products recomendation
+	vector<int> number; //number of times each product was purchased
 
 	vector<vector<bool> > matrix_recomendation(nlines, vector<bool>(ncolumns, false)); /*Matrix*/
 
@@ -1398,16 +1524,7 @@ void VendeMaisMais::recomendationSystem(vector<Customer> &customers, vector<Prod
 		}
 	}
 
-	for (int i = 0; i < matrix_recomendation.size(); i++)
-	{
-		for (int k = 0; k < matrix_recomendation.at(i).size(); k++)
-		{
-			cout << matrix_recomendation[i][k] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-
+	//find out who is the closest customer to the target customer
 	float max = 0;
 	for (int i = 0; i < nlines; i++)
 	{
@@ -1421,22 +1538,20 @@ void VendeMaisMais::recomendationSystem(vector<Customer> &customers, vector<Prod
 
 
 	}
-
+	//recommends that customer
 	for (int i = 0; i < nlines; i++)
 	{
 		if (max == compare(matrix_recomendation[identifier - 1], matrix_recomendation[i]))
 			getRecomendation(product_recomendation, matrix_recomendation[identifier - 1], matrix_recomendation[i], products);
-
 	}
 
-
+	//puts in the vector number the number of times each product was purchased
 	for (int i = 0; i < products.size(); i++)
 	{
 		number.push_back(chooseProduct(product_recomendation, products.at(i).getName()));
 	}
 
-
-	cout << "The recommended product is " << products.at(returnIndexMax(number)).getName() << endl << endl;
+	cout << "\nThe recommended product is " << products.at(returnIndexMax(number)).getName() << endl << endl;
 
 	/*If don't exist similiar purchases, in other words, if the vector with recommended products is empty, show this message*/
 	if (product_recomendation.size() == 0)

@@ -35,12 +35,3 @@ vector<string> Transaction::getProducts() const
 	return products;
 }
 
-Transaction::Transaction(ifstream & in)
-{ // Reading a transaction in the form ID ; date ; products list
-  // A IMPLEMENTAR
-}
-
-void Transaction::save(ofstream & out) const
-{ // Transaction stored in the form ID ; date ; products list
-  // A IMPLEMENTAR
-}

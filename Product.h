@@ -17,7 +17,6 @@ private:
 
 public:
 	Product();
-	Product(ifstream & in);
 	void setName(string name);
 	void setCost(float cost);
 	string getName() const;

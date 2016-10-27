@@ -288,10 +288,10 @@ unsigned short int menuRecomendationSystem(vector <Customer> &customers, vector 
 		vendevar.recomendationSystem(customers, products, transactions, id);
 		break;
 	case 2:
-		//vendevar.bottom10VP();
+		vendevar.bottom10VP(customers);
 		break;
 	case 3:
-		//vendevar.recomendationBottom10();
+		vendevar.recomendationBottom10(customers,products,transactions);
 		break;
 	default:
 		cout << "Invalid option. Try again." << endl;

@@ -6,10 +6,6 @@ Customer::Customer()
 
 }
 
-Customer::Customer(ifstream & in)
-{
-
-}
 
 void Customer::setName(string name)
 {

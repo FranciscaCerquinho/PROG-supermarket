@@ -5,10 +5,6 @@ Product::Product()
 
 }
 
-Product::Product(ifstream & in)
-{ // nome ; custo
-  // A IMPLEMENTAR
-}
 
 void Product::setName(string name)
 {
